@@ -10,10 +10,12 @@ import Home from '../Home/Home'
 import PrivateRoute from '../../containers/PrivateRoute'
 import PublicRoute from '../../containers/PublicRoute'
 import Auth from '../../containers/Auth/Auth'
+import api from '../../lib/api/index'
 
-const App = ({ listen }) => {
+const App = ({ listen, user }) => {
   useEffect(() => {
     listen()
+    api.setTokenGetter(() => user.idToken)
   }, [])
 
   return (
@@ -32,7 +34,7 @@ const mapDispatch = dispatch => ({
 const ConnectedApp = compose(
   withRouter,
   connect(
-    ({ auth }) => ({ unsub: auth.unsub }),
+    ({ auth }) => ({ unsub: auth.unsub, user: auth.user }),
     mapDispatch
   )
 )(App)

@@ -1,4 +1,5 @@
 import auth from '../../lib/auth'
+import api from '../../lib/api'
 
 const initialState = {
   authenticated: false,
@@ -23,10 +24,14 @@ export default {
   },
 
   effects: dispatch => ({
-    listen: () => {
+    listen: (payload, rootState) => {
+      // Let our API client know how to set our token
+      api.setTokenGetter(() => rootState.auth.user.idToken)
+
       const unsub = auth.listen(user => {
         if (!user) dispatch.auth.RESET_AUTH()
         else {
+          // api.setTokenGetter(user.getIdToken)
           user
             .getIdToken()
             .then(idToken => {

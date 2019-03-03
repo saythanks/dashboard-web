@@ -4,9 +4,8 @@ import 'firebase/auth'
 const actionCodeSettings = () => ({
   // URL you want to redirect back to. The domain (www.example.com) for this
   // URL must be whitelisted in the Firebase Console.
-  url: `${window.location.protocol}//${window.location.hostname}${
-    window.location.port === 80 ? '' : `:${window.location.port}`
-  }/login/verify`,
+  url: `${window.location.protocol}//${window.location.hostname}${window
+    .location.port && `:${window.location.port}`}/login/verify`,
   // This must be true.
   handleCodeInApp: true,
 })
@@ -28,4 +27,6 @@ export default {
   // Returns unsubscribe object
   listen: callback => firebase.auth().onAuthStateChanged(callback),
   logout: () => firebase.auth().signOut(),
+
+  getToken: async () => await firebase.auth().currentUser.getIdToken(),
 }
