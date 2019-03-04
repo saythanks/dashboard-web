@@ -1,20 +1,22 @@
 import React from 'react'
 import { connect } from 'react-redux'
+import { Link } from 'react-router-dom'
 
-const Nav = ({ user, logout }) => {
+const Nav = ({ logout }) => {
   return (
     <nav className="bg-white border-b border-grey-100">
       <div className="bg-pink-400 h-1 w-full" />
       <div className="container mx-auto py-6 flex justify-between items-baseline">
         <section>
-          <span className="font-bold text-pink-500">SayThanks</span>{' '}
-          <span className="uppercase text-sm tracking-wide text-grey-300">
-            Dashboard
-          </span>
+          <Link to="/" className="no-underline">
+            <span className="font-bold text-pink-500">SayThanks</span>{' '}
+            <span className="uppercase text-sm tracking-wide text-grey-300">
+              Dashboard
+            </span>
+          </Link>
         </section>
 
         <section>
-          <p>{user.email}</p>
           <button
             className="hover:bg-grey-100 px-3 py-2 rounded-sm active:text-black text-grey-800"
             onClick={logout}
@@ -27,8 +29,7 @@ const Nav = ({ user, logout }) => {
   )
 }
 
-const mapState = ({ auth: { user, authenticated } }) => ({
-  user,
+const mapState = ({ auth: { authenticated } }) => ({
   authenticated,
 })
 

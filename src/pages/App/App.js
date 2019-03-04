@@ -15,8 +15,12 @@ import api from '../../lib/api/index'
 const App = ({ listen, user }) => {
   useEffect(() => {
     listen()
-    api.setTokenGetter(() => user.idToken)
   }, [])
+
+  useEffect(() => {
+    if (user) api.setTokenGetter(() => user.idToken)
+    else api.setTokenGetter(() => null)
+  }, [user])
 
   return (
     <div className="h-full">
