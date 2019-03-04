@@ -18,34 +18,33 @@ class ApiClient {
   }
 
   updateHeaders = async () => {
-    const header = `Bearer ${await this.getToken()}`
-    console.log(header)
-    axios.defaults.headers.common['Authorization'] = header
+    const header = `Bearer ${this.getToken()}`
+    this.instance.defaults.headers.common['Authorization'] = header
   }
 
-  get = (url, token, ...args) => {
+  get = async (...args) => {
     this.updateHeaders()
-    return this.instance.get(...args)
+    return (await this.instance.get(...args)).data
   }
 
-  post = (...args) => {
+  post = async (...args) => {
     this.updateHeaders()
-    return this.instance.post(...args)
+    return (await this.instance.post(...args)).data
   }
 
-  put = (...args) => {
+  put = async (...args) => {
     this.updateHeaders()
-    return this.instance.put(...args)
+    return (await this.instance.put(...args)).data
   }
 
-  patch = (...args) => {
+  patch = async (...args) => {
     this.updateHeaders()
-    return this.instance.patch(...args)
+    return (await this.instance.patch(...args)).data
   }
 
-  delete = (...args) => {
+  delete = async (...args) => {
     this.updateHeaders()
-    return this.instance.delete(...args)
+    return (await this.instance.delete(...args)).data
   }
 }
 
