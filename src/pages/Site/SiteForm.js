@@ -7,12 +7,7 @@ import { useForm } from '../../hooks/useForm'
 import * as yup from 'yup'
 
 const IntegrationForm = ({ create, app }) => {
-  // const [name, setName] = useState('')
-  // const [description, setDescription] = useState('')
-  // const [url, setUrl] = useState('')
-
   const [success, setSuccess] = useState(false)
-  // const [loading, setLoading] = useState(false)
 
   const handleSubmit = values => {
     create(values)
