@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
-import { Input } from '../Form'
+import { Input } from '../../components/Form'
 
 const Login = ({ requestLink }) => {
   const [email, setEmail] = useState('')
@@ -24,22 +24,6 @@ const Login = ({ requestLink }) => {
           {!submitted ? (
             <form onSubmit={handleSubmit} className="clearfix">
               <Input title="Email" value={email} onChange={setEmail} />
-              {/* <div className="mb-6">
-                <label
-                  htmlFor="email"
-                  className="text-sm text-grey-600 font-bold mb-2 block"
-                >
-                  Email
-                </label>
-                <input
-                  type="email"
-                  id="email"
-                  value={email}
-                  required
-                  className="block focus:outline-none w-full bg-grey-050 rounded-sm px-4 py-2 text-lg"
-                  onChange={e => setEmail(e.target.value)}
-                />
-              </div> */}
 
               <button className="bg-pink-400 px-4 py-2 text-white rounded-sm float-right shadow-lg block font-bold">
                 Sign in

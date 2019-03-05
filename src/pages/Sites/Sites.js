@@ -35,9 +35,13 @@ const Placeholder = () => {
   return (
     <Link
       className={appStyle(true) + ' block relative'}
-      to="/integrations/new"
+      to="/sites/new"
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
+      style={{
+        minWidth: '250px',
+        maxWidth: '25%',
+      }}
     >
       <Chrome placeholder />
       <div className="text-grey-300">
@@ -77,7 +81,7 @@ const Placeholder = () => {
 }
 
 const appStyle = placeholder =>
-  'rounded no-underline text-black w-64 m-12 flex-grow border border-grey-100 overflow-hidden ' +
+  'rounded inline-block no-underline flex-1 text-black w-64 mx-12 my-6 border border-grey-100 overflow-hidden ' +
   (!placeholder && 'bg-white shadow-md border-none')
 
 const App = ({ app }) => {
@@ -88,7 +92,11 @@ const App = ({ app }) => {
       className={appStyle(false)}
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
-      to={`/integrations/${app.id}`}
+      to={`/sites/${app.id}`}
+      style={{
+        minWidth: '250px',
+        // flex: '0 0 33.3333333%',
+      }}
     >
       <Chrome placeholder={hovering} />
       <div className="p-3  flex flex-col justify-between">
@@ -110,9 +118,9 @@ const Apps = ({ apps, loadApps }) => {
   }, [])
 
   return (
-    <>
-      <h1 className="mb-10">My Integrations</h1>
-      <div className="-m-12 flex justify-between flex-wrap">
+    <div className="w-full flex flex-col items-center mb-20">
+      <h1 className="mb-16 md:self-start mx-12 ">My Sites</h1>
+      <div className="w-full -m-12 flex items-center md:items-stretch md:flex-wrap flex-col md:flex-row">
         {apps.length === 0 && (
           <>
             <Placeholder />
@@ -123,8 +131,9 @@ const Apps = ({ apps, loadApps }) => {
           <App app={app} key={app.id} />
         ))}
         <Placeholder />
+        {/* <div className="filler flex-1" /> */}
       </div>
-    </>
+    </div>
   )
 }
 

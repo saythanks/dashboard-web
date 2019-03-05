@@ -35,7 +35,7 @@ export default {
             .getIdToken()
             .then(idToken => {
               dispatch.auth.SET_USER({
-                email: user.emaill,
+                email: user.email,
                 uid: user.uid,
                 idToken,
               })
