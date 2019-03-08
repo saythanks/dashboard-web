@@ -40,20 +40,30 @@ export const TextArea = ({
 )
 export const Input = ({
   className,
+  model = null,
   title,
+  onBlur,
   type = 'text',
   value,
   onChange = () => null,
   error = null,
   ...props
 } = {}) => (
-  <FormGroup title={title} className={className} error={error}>
+  <FormGroup
+    title={title}
+    className={className}
+    error={model ? model.error : error}
+  >
     <input
       type={type}
-      value={value}
-      // className="block focus:outline-none w-full bg-grey-050 rounded-sm px-4 py-2 text-lg"
+      value={model ? model.value : value}
       className={textInputStyle(error)}
-      onChange={e => onChange(e.target.value)}
+      onChange={e =>
+        model ? model.onChange(e.target.value) : onChange(e.target.value)
+      }
+      onBlur={e =>
+        model ? model.onBlur(e.target.value) : onBlur(e.target.value)
+      }
       {...props}
     />
   </FormGroup>

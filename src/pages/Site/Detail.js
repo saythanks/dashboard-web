@@ -2,6 +2,9 @@ import React, { useEffect } from 'react'
 import { connect } from 'react-redux'
 import { SecondaryButton } from '../../components/Button'
 import Spinner from '../../components/Spinner/Spinner'
+import { Link, Route } from 'react-router-dom'
+import Integration from '../Integration/Integration'
+import IntegrationList from './IntegrationList'
 
 const Detail = ({ match, app, payables, load }) => {
   useEffect(() => {
@@ -31,21 +34,33 @@ const Detail = ({ match, app, payables, load }) => {
 
       <section>
         <div>
-          <h2 className="inline-block mr-6 uppercase tracking-wide font-semibold text-base text-grey-600">
+          <h2 className="inline-block mr-6 mb-6 uppercase tracking-wide font-semibold text-base text-grey-600">
             Integrations
           </h2>
-          <SecondaryButton size="sm">
-            <i className="fas fa-plus" /> Add Integration
-          </SecondaryButton>
+          <Link to={`${match.url}/payables/new`}>
+            <SecondaryButton size="sm" onClick={() => null}>
+              <i className="fas fa-plus" /> Add Integration
+            </SecondaryButton>
+          </Link>
         </div>
-        <pre>{JSON.stringify(payables, null, 2)}</pre>
+        {payables && <IntegrationList app={app} payables={payables} />}
       </section>
     </div>
   )
 
   return (
     <div className="max-w-md mx-auto">
-      {!app || app.id !== match.params.id ? <Loading /> : <AppContent />}
+      <Route
+        path={`${match.path}/payables`}
+        render={({ match }) => <Integration app={app} match={match} />}
+      />
+      <Route
+        path={`${match.path}`}
+        exact
+        render={() =>
+          !app || app.id !== match.params.id ? <Loading /> : <AppContent />
+        }
+      />
     </div>
   )
 }

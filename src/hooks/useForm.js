@@ -96,5 +96,24 @@ export const useForm = ({
     return Promise.resolve(onSubmit(values)).then(() => setIsSubmitting(false))
   }
 
-  return { values, onBlur, onChange, submit, errors, isSubmitting, done }
+  const fields = {}
+  Object.keys(values).forEach(name => {
+    fields[name] = {
+      value: values[name],
+      onChange: onChange(name),
+      onBlur: onBlur(name),
+      error: errors[name],
+    }
+  })
+
+  return {
+    fields,
+    values,
+    onBlur,
+    onChange,
+    submit,
+    errors,
+    isSubmitting,
+    done,
+  }
 }

@@ -17,6 +17,7 @@ const Button = ({
 } = {}) => (
   <button
     onClick={onClick}
+    disabled={loading}
     className={classnames(
       {
         [sizes.sm]: size === 'sm',

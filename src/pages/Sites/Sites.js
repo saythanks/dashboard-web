@@ -38,10 +38,6 @@ const Placeholder = () => {
       to="/sites/new"
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
-      style={{
-        minWidth: '250px',
-        maxWidth: '25%',
-      }}
     >
       <Chrome placeholder />
       <div className="text-grey-300">
@@ -81,7 +77,7 @@ const Placeholder = () => {
 }
 
 const appStyle = placeholder =>
-  'rounded inline-block no-underline flex-1 text-black w-64 mx-12 my-6 border border-grey-100 overflow-hidden ' +
+  'rounded inline-block no-underline w-full h-full text-black w-1/3 border border-grey-100 overflow-hidden ' +
   (!placeholder && 'bg-white shadow-md border-none')
 
 const App = ({ app }) => {
@@ -93,10 +89,6 @@ const App = ({ app }) => {
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
       to={`/sites/${app.id}`}
-      style={{
-        minWidth: '250px',
-        // flex: '0 0 33.3333333%',
-      }}
     >
       <Chrome placeholder={hovering} />
       <div className="p-3  flex flex-col justify-between">
@@ -112,25 +104,37 @@ const App = ({ app }) => {
   )
 }
 
+const Wrap = ({ children }) => (
+  <div className="w-full md:w-1/3 flex-0 inline-block p-6">{children}</div>
+)
+
 const Apps = ({ apps, loadApps }) => {
   useEffect(() => {
     loadApps()
   }, [])
 
   return (
-    <div className="w-full flex flex-col items-center mb-20">
-      <h1 className="mb-16 md:self-start mx-12 ">My Sites</h1>
-      <div className="w-full -m-12 flex items-center md:items-stretch md:flex-wrap flex-col md:flex-row">
+    <div className="flex flex-col items-stretch mb-20">
+      <h1 className="mb-16 md:self-start">My Sites</h1>
+      <div className="flex flex-wrap -m-6">
         {apps.length === 0 && (
           <>
-            <Placeholder />
-            <Placeholder />
+            <Wrap>
+              <Placeholder />
+            </Wrap>
+            <Wrap>
+              <Placeholder />
+            </Wrap>
           </>
         )}
         {apps.map(app => (
-          <App app={app} key={app.id} />
+          <Wrap>
+            <App app={app} key={app.id} />
+          </Wrap>
         ))}
-        <Placeholder />
+        <Wrap>
+          <Placeholder />
+        </Wrap>
         {/* <div className="filler flex-1" /> */}
       </div>
     </div>

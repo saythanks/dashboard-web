@@ -50,9 +50,9 @@ const IntegrationForm = ({ create, app }) => {
     >
       <h2 className="text-xl mb-3">New Site</h2>
       <p className="leading-normal text-grey-600 text-sm mb-4">
-        Each integration is like a bucket to hold related pieces of content and
-        recieve payment. When a user pays for or gives to your content, they
-        will see this information as who their money is going to.
+        Each site is like a bucket to hold related pieces of content and recieve
+        payment. When a user pays for or gives to your content, they will see
+        this information as who their money is going to.
       </p>
       <Input
         title="Name"
