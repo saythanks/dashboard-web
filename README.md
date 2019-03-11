@@ -1,5 +1,4 @@
-[![SayThanks](http://localhost:3000/saythanks_embed.svg)](http://localhost:3000/to/cfad2772-f142-411a-bd84-a691c0641c90)
-
+[![SayThanks](https://wallet.saythanks.me/saythanks_embed.svg)](https://wallet.saythanks.me/to/dea63e98-da47-4e22-a305-8918bde6c8a5)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
