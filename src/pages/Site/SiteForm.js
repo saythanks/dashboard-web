@@ -8,18 +8,21 @@ import * as yup from 'yup'
 
 const IntegrationForm = ({ create, update, app, edit, destroy, appId }) => {
   const [success, setSuccess] = useState(false)
+  // const [app, setApp] = useState(null)
 
   const handleSubmit = values => {
-    if (!edit)
-      create(values)
-        .then(() => setSuccess(true))
-        .catch(console.error)
-        .finally(done)
-    else
-      update(values)
-        .then(() => setSuccess(true))
-        .catch(console.error)
-        .finally(done)
+    // if (!edit)
+    create(values)
+      .then(id => {
+        setSuccess(true)
+      })
+      .catch(console.error)
+      .finally(done)
+    // else
+    // update(values)
+    // .then(() => setSuccess(true))
+    // .catch(console.error)
+    // .finally(done)
   }
 
   const {
@@ -47,7 +50,7 @@ const IntegrationForm = ({ create, update, app, edit, destroy, appId }) => {
     },
   })
 
-  if (success && app) return <Redirect to={`/sites/${app.id}`} />
+  if (success) return <Redirect to="/" />
 
   return (
     <form

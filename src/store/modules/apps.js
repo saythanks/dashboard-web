@@ -39,7 +39,7 @@ export default {
       const app = await api.post('/apps', { name, description, url })
 
       dispatch.apps.SET_APP(app)
-      return
+      return app.id
     },
 
     async get(id) {
