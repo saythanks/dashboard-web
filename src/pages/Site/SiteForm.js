@@ -47,7 +47,7 @@ const IntegrationForm = ({ create, update, app, edit, destroy, appId }) => {
     },
   })
 
-  if (success) return <Redirect to={`/sites/${app.id}`} />
+  if (success && app) return <Redirect to={`/sites/${app.id}`} />
 
   return (
     <form
