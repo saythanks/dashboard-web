@@ -13,8 +13,8 @@ const Detail = ({ payable, app, load, match, loading }) => {
       .port && `:${window.location.port}`}`
 
   const getCodeStringHTML = () =>
-    `<a href="${currentURL()}/to/${payable.id}">
-  <img src="${currentURL()}/saythanks_embed.svg" alt="Say Thanks" width="250" />
+    `<a href="https://wallet.saythanks.me/to/${payable.id}">
+  <img src="$https://wallet.saythanks.me/saythanks_embed.svg" alt="Say Thanks" width="250" />
 </a>`
 
   const getCodeStringMD = () =>
