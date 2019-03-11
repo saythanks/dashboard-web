@@ -50,3 +50,19 @@ class ApiClient {
 
 const api = new ApiClient()
 export default api
+
+// const restify = (url, nested = {}) => api => ({
+//   list: () => api.get(url),
+//   get: id => api.get(`${url}/${id}`),
+//   create: id => api.post(`${url}`),
+//   update: id => api.patch(`${url}/${id}`),
+//   delete: id => api.delete(`${url}/${id}`),
+//   ...nested,
+// })
+// class RestApi extends ApiClient {
+//   constructor({ url, ...endpoints }) {}
+// }
+
+// const api = RestApi({
+//   url: 'http://localhost:5000',
+// })

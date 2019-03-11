@@ -1,15 +1,28 @@
 import api from '../../lib/api/index'
 
-const initialState = {
-  data: [],
-  current: null,
-}
+const initialState = {}
 
 export default {
   state: initialState,
   reducers: {
-    SET_PAYABLES: (state, payables) => ({ ...state, data: payables }),
-    SET_CURRENT_PAYABLE: (state, payable) => ({ ...state, current: payable }),
+    ADD_PAYABLES: (state, payables) => ({
+      ...state,
+      ...payables.reduce((acc, elem) => ({ ...acc, [elem.id]: elem }), {}),
+    }),
+
+    SET_PAYABLES: (state, payables) =>
+      payables.reduce((acc, elem) => ({ ...acc, [elem.id]: elem }), {}),
+
+    SET_PAYABLE: (state, payable) => ({
+      ...state,
+      [payable.id]: payable,
+    }),
+
+    DELETE_PAYABLE: (state, id) => {
+      const bucket = state
+      delete bucket[id]
+      return bucket
+    },
   },
 
   effects: dispatch => ({
@@ -24,17 +37,17 @@ export default {
         display_price: price,
         permalink: url,
       })
-      dispatch.payables.SET_CURRENT_PAYABLE(payable)
-      dispatch.payables.SET_PAYABLES([])
-
-      return
+      dispatch.payables.SET_PAYABLE(payable)
     },
 
     async get(id) {
       const payable = await api.get(`/payables/${id}`)
-      dispatch.payables.SET_CURRENT_PAYABLE(payable)
+      dispatch.payables.SET_PAYABLE(payable)
+    },
 
-      return
+    async delete(id) {
+      await api.delete(`/payables/${id}`)
+      dispatch.payables.DELETE_PAYABLE(id)
     },
   }),
 }

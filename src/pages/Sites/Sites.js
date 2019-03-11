@@ -127,9 +127,9 @@ const Apps = ({ apps, loadApps }) => {
             </Wrap>
           </>
         )}
-        {apps.map(app => (
-          <Wrap>
-            <App app={app} key={app.id} />
+        {Object.keys(apps).map(id => (
+          <Wrap key={id}>
+            <App app={apps[id]} />
           </Wrap>
         ))}
         <Wrap>
@@ -141,8 +141,8 @@ const Apps = ({ apps, loadApps }) => {
   )
 }
 
-const mapState = ({ apps }) => ({ apps: apps.data })
-const mapDispatch = ({ apps }) => ({ loadApps: apps.loadApps })
+const mapState = ({ apps }) => ({ apps })
+const mapDispatch = ({ apps }) => ({ loadApps: apps.list })
 export default connect(
   mapState,
   mapDispatch

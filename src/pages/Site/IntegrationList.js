@@ -27,8 +27,8 @@ const IntegrationList = ({ payables, app }) => {
   console.log(payables)
   return (
     <div className="bg-white shadow rounded">
-      {payables.map(payable => (
-        <IntegrationRow key={payable.id} payable={payable} app={app} />
+      {Object.keys(payables).map(id => (
+        <IntegrationRow key={id} payable={payables[id]} app={app} />
       ))}
     </div>
   )

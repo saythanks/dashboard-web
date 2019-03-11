@@ -6,12 +6,13 @@ import { Link, Route } from 'react-router-dom'
 import Integration from '../Integration/Integration'
 import IntegrationList from './IntegrationList'
 
-const Detail = ({ match, app, payables, load }) => {
+const Detail = ({ match, app, payables, loadApp, loadPayables }) => {
   useEffect(() => {
     if (!match.params.id) return
 
     // Get the app info
-    load()
+    loadApp()
+    loadPayables()
   }, [])
 
   const Loading = () => (
@@ -65,13 +66,18 @@ const Detail = ({ match, app, payables, load }) => {
   )
 }
 
-const mapState = ({ apps }, { match }) => ({
-  app: apps.currentApp,
-  payables: apps.payables,
+const mapState = ({ apps, payables }, { match }) => ({
+  app: apps[match.params.id],
+  payables: Object.keys(payables).reduce((accum, id) => {
+    if (payables[id].app_id === match.params.id)
+      return { ...accum, [id]: payables[id] }
+    return accum
+  }, {}),
 })
 
-const mapDispatch = ({ apps }, { match }) => ({
-  load: () => apps.getApp(match.params.id),
+const mapDispatch = ({ apps, payables }, { match }) => ({
+  loadApp: () => apps.get(match.params.id),
+  loadPayables: () => payables.list(match.params.id),
 })
 export default connect(
   mapState,

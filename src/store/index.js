@@ -1,5 +1,6 @@
 import { init } from '@rematch/core'
 import createPersistPlugin from '@rematch/persist'
+import createLoadingPlugin from '@rematch/loading'
 
 import auth from './modules/auth'
 import apps from './modules/apps'
@@ -10,9 +11,11 @@ const persist = createPersistPlugin({
   version: 1,
 })
 
+const loading = createLoadingPlugin({})
+
 const store = init({
   models: { auth, apps, payables },
-  plugins: [persist],
+  plugins: [persist, loading],
 })
 
 export default store
