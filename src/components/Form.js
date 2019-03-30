@@ -1,4 +1,5 @@
 import React from 'react'
+import chevron from './chevron-down.png'
 
 export const FormGroup = ({ className, title, error, children }) => (
   <div className={'mb-6 ' + className}>
@@ -66,5 +67,48 @@ export const Input = ({
       }
       {...props}
     />
+  </FormGroup>
+)
+
+export const Select = ({
+  className,
+  model = null,
+  title,
+  onBlur = () => null,
+  options,
+  value,
+  onChange = () => null,
+  error = null,
+  ...props
+}) => (
+  <FormGroup
+    title={title}
+    className={className}
+    error={model ? model.error : error}
+  >
+    <select
+      id={title}
+      value={model ? model.value : value}
+      className={textInputStyle(error) + ' cursor-pointer appearance-none pr-4'}
+      onChange={e =>
+        model ? model.onChange(e.target.value) : onChange(e.target.value)
+      }
+      onBlur={e =>
+        model ? model.onBlur(e.target.value) : onBlur(e.target.value)
+      }
+      style={{
+        background: `url(${chevron})`,
+        backgroundPosition: 'right 10px center',
+        backgroundRepeat: 'no-repeat',
+        backgroundSize: 10,
+      }}
+      {...props}
+    >
+      {Object.keys(options).map(option => (
+        <option key={option} value={option}>
+          {options[option]}
+        </option>
+      ))}
+    </select>
   </FormGroup>
 )

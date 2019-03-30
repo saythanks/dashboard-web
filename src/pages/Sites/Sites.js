@@ -34,7 +34,7 @@ const Placeholder = () => {
 
   return (
     <Link
-      className={appStyle(true) + ' block relative'}
+      className={appStyle(true) + ' block relative bg-grey-050'}
       to="/sites/new"
       onMouseEnter={() => setHovering(true)}
       onMouseLeave={() => setHovering(false)}
@@ -78,7 +78,7 @@ const Placeholder = () => {
 
 const appStyle = placeholder =>
   'rounded inline-block no-underline w-full h-full text-black w-1/3 border border-grey-100 overflow-hidden ' +
-  (!placeholder && 'bg-white shadow-md border-none')
+  (!placeholder ? 'bg-white shadow-lg border-none btn-floating' : 'shadow')
 
 const App = ({ app }) => {
   const [hovering, setHovering] = useState(false)
@@ -127,9 +127,9 @@ const Apps = ({ apps, loadApps }) => {
   )
 
   return (
-    <div className="flex flex-col items-stretch mb-20">
-      <h1 className="mb-16 md:self-start">My Sites</h1>
-      <div className="flex flex-wrap -m-6">
+    <div className="flex flex-col items-stretch mb-20 -my-32">
+      {/* <h1 className="mb-16 md:self-start">My Sites</h1> */}
+      <div className="flex flex-wrap -m-6 ">
         {apps.length === 0 && (
           <>
             <Wrap>

@@ -1,68 +1,35 @@
-.spinner {
-  /* margin: 100px auto; */
-  width: 40px;
-  height: 40px;
-  position: relative;
-  text-align: center;
-
-  display: block;
-
-  -webkit-animation: sk-rotate 2s infinite linear;
-  animation: sk-rotate 2s infinite linear;
-}
-
-.dot1,
-.dot2 {
-  width: 60%;
-  height: 60%;
+.lds-ring {
   display: inline-block;
+  position: relative;
+  width: 30px;
+  height: 30px;
+}
+.lds-ring div {
+  box-sizing: border-box;
+  display: block;
   position: absolute;
-  top: 0;
-  /* background-color: #333; */
-  @apply bg-grey-600;
-  border-radius: 100%;
-
-  -webkit-animation: sk-bounce 2s infinite ease-in-out;
-  animation: sk-bounce 2s infinite ease-in-out;
+  width: 30px;
+  height: 30px;
+  margin: 6px;
+  border: 2px solid white;
+  border-radius: 50%;
+  animation: lds-ring 1.2s cubic-bezier(0.5, 0, 0.5, 1) infinite;
+  border-color: config(colors.grey-200) transparent transparent transparent;
 }
-
-.dot2 {
-  top: auto;
-  bottom: 0;
-  -webkit-animation-delay: -1s;
-  animation-delay: -1s;
+.lds-ring div:nth-child(1) {
+  animation-delay: -0.45s;
 }
-
-@-webkit-keyframes sk-rotate {
-  100% {
-    -webkit-transform: rotate(360deg);
+.lds-ring div:nth-child(2) {
+  animation-delay: -0.3s;
+}
+.lds-ring div:nth-child(3) {
+  animation-delay: -0.15s;
+}
+@keyframes lds-ring {
+  0% {
+    transform: rotate(0deg);
   }
-}
-@keyframes sk-rotate {
   100% {
     transform: rotate(360deg);
-    -webkit-transform: rotate(360deg);
-  }
-}
-
-@-webkit-keyframes sk-bounce {
-  0%,
-  100% {
-    -webkit-transform: scale(0);
-  }
-  50% {
-    -webkit-transform: scale(1);
-  }
-}
-
-@keyframes sk-bounce {
-  0%,
-  100% {
-    transform: scale(0);
-    -webkit-transform: scale(0);
-  }
-  50% {
-    transform: scale(1);
-    -webkit-transform: scale(1);
   }
 }
