@@ -12,6 +12,9 @@ import PublicRoute from '../../containers/PublicRoute'
 import Auth from '../../containers/Auth/Auth'
 import api from '../../lib/api/index'
 
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+
 const App = ({ listen, user }) => {
   useEffect(() => {
     listen()
@@ -24,6 +27,7 @@ const App = ({ listen, user }) => {
 
   return (
     <div className="h-full">
+      <ToastContainer />
       <Switch>
         <PublicRoute path="/login" component={Auth} />
         <PrivateRoute path="/" component={Home} />

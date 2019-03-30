@@ -39,8 +39,15 @@ export const PrimaryButton = ({ children, ...props } = {}) => (
   </Button>
 )
 
-export const SecondaryButton = ({ children, ...props } = {}) => (
-  <Button {...props} className="bg-pink-050 text-pink-500 font-medium">
+export const SecondaryButton = ({ children, className, ...props } = {}) => (
+  <Button
+    {...props}
+    className={
+      'bg-white btn-floating rounded-full active:text-pink-500' +
+      'flex items-center uppercase text-sm font-semibold text-pink-500 ' +
+      className
+    }
+  >
     {children}
   </Button>
 )

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
-import { SecondaryButton } from '../../components/Button'
+import { SecondaryButton, PrimaryButton } from '../../components/Button'
 import Spinner from '../../components/Spinner/Spinner'
 import { Link, Route } from 'react-router-dom'
 import Integration from '../Integration/Integration'
@@ -11,6 +11,8 @@ import 'react-tabs/style/react-tabs.css'
 import { monokaiSublime } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 import config from '../../config'
 import { FormGroup } from '../../components/Form'
+import useClipboard from '../../hooks/useClipboard'
+import { toast } from 'react-toastify'
 
 const Detail = ({ match, app, payables, loadApp, loadPayables }) => {
   useEffect(() => {
@@ -41,18 +43,48 @@ const Detail = ({ match, app, payables, loadApp, loadPayables }) => {
 
   const getCodeStringMD = () => `[![SayThanks](${imgUrl()})](${actionUrl()})`
 
+  const { copy } = useClipboard()
+
   const AppContent = () => (
-    <div className="max-w-md mx-auto">
-      <section className="mb-12 flex justify-between items-center">
+    <div className="-mt-32">
+      <section
+        className="mb-12 flex justify-between items-center 
+                   sm:w-1/2 2-full bg-white shadow-lg rounded p-6"
+      >
         <div>
-          <h1 className="text-3xl mb-2 text-grey-800">{app.name}</h1>
-          <p className="text-lg leading-normal text-grey-800">
+          {/* <Link
+            to="/"
+            className="mb-2 text-base text-grey-400 font-semibold no-underline block"
+          >
+            <i className="fas fa-chevron-left mr-2 text-grey-200" />
+            All Sites
+          </Link> */}
+          <h1 className="text-2xl mb-2 text-grey-800">{app.name}</h1>
+          <p className="text-lg leading-normal text-grey-600">
             {app.description}{' '}
             <a href={app.url} className="ml-2 font-normal text-cyan-700">
               <i className="fas fa-link text-xs mr-1 opacity-50" />
               {app.url}
             </a>
           </p>
+          <div className="mt-4 -mx-2 flex items-center">
+            <Link
+              to={`${match.url}/settings`}
+              className="btn-floating bg-white px-4 py-2 border border-grey-100 rounded-full active:bg-grey-100 hover:bg-grey-050 no-underline 
+                              mx-2 inline-flex items-baseline uppercase text-sm font-semibold text-grey-500"
+            >
+              <i className="fas fa-cog text-grey-200 text-sm mr-2" />
+              <span className="">Site Settings</span>
+            </Link>
+            <Link
+              to={`${match.url}/cashout`}
+              className="btn-floating bg-white px-4 py-2 border border-grey-100 rounded-full active:bg-grey-100 hover:bg-grey-050 no-underline 
+                              mx-2 inline-flex items-baseline uppercase text-sm font-semibold text-grey-500"
+            >
+              <i className="fas fa-dollar-sign text-grey-200 text-sm mr-2" />
+              <span className="">Cash out</span>
+            </Link>
+          </div>
         </div>
         {/* <div>
           <Link
@@ -66,7 +98,7 @@ const Detail = ({ match, app, payables, loadApp, loadPayables }) => {
         </div> */}
       </section>
 
-      <section className="mb-6">
+      <section className="mb-6 bg-white w-1/2 px-4 py-6 shadow-lg rounded">
         <h2 className="inline-block mr-6 mb-4 uppercase tracking-wide font-semibold text-base text-grey-600">
           Create an Integration
         </h2>
@@ -96,14 +128,30 @@ const Detail = ({ match, app, payables, loadApp, loadPayables }) => {
               <option value="25">$0.25</option>
               <option value="50">$0.50</option>
               <option value="75">$0.75</option>
-              <option value="75">$0.75</option>
               <option value="100">$1</option>
             </select>
           </FormGroup>
         </div>
 
         <div>
-          <Tabs>
+          <button
+            onClick={() =>
+              copy(getCodeStringHTML(), () =>
+                toast.success('Copied embed code')
+              )
+            }
+          >
+            Copy
+          </button>
+          <SyntaxHighlighter
+            lang="html"
+            className="rounded shadow-md"
+            style={monokaiSublime}
+            codeTagProps={{ style: { fontSize: '12px' } }}
+          >
+            {getCodeStringHTML()}
+          </SyntaxHighlighter>
+          {/* <Tabs>
             <TabList className=" list-reset mb-2">
               <div>
                 <Tab
@@ -141,10 +189,11 @@ const Detail = ({ match, app, payables, loadApp, loadPayables }) => {
                 {getCodeStringMD()}
               </SyntaxHighlighter>
             </TabPanel>
-          </Tabs>
+          </Tabs> */}
 
-          <h3>Preview</h3>
-          <div dangerouslySetInnerHTML={{ __html: getCodeStringHTML() }} />
+          <div className="bg-grey-050 -mx-4 -mb-6 px-4 py-6 mt-4 text-center">
+            <div dangerouslySetInnerHTML={{ __html: getCodeStringHTML() }} />
+          </div>
         </div>
       </section>
 
