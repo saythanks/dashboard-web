@@ -7,7 +7,7 @@
 </a>
 
 <a href="https://wallet.saythanks.me/to/761eb1d3-f0de-4ad5-a1b5-dfd39a1f7e45?price=100" target="_blank">
-  <img src="https://api.saythanks.me/embed?theme=solid&price=100&test" alt="Say Thanks" width="200" />
+  <img src="https://api.saythanks.me/embed?theme=solid&price=100" alt="Say Thanks" width="200" />
 </a>
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
