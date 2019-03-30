@@ -1,4 +1,4 @@
-[![SayThanks](https://wallet.saythanks.me/embed.png)](https://wallet.saythanks.me/to/ef9470f3-5040-4f48-b88f-37d23575217f)
+[![SayThanks](https://api.saythanks.me/embed?theme=minimal&price=50)](https://wallet.saythanks.me/to/761eb1d3-f0de-4ad5-a1b5-dfd39a1f7e45?price=50)
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
