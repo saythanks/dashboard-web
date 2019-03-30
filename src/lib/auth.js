@@ -1,5 +1,6 @@
 import firebase from 'firebase/app'
 import 'firebase/auth'
+import jwtDecode from 'jwt-decode'
 
 const actionCodeSettings = () => ({
   // URL you want to redirect back to. The domain (www.example.com) for this
@@ -28,5 +29,8 @@ export default {
   listen: callback => firebase.auth().onAuthStateChanged(callback),
   logout: () => firebase.auth().signOut(),
 
-  getToken: async () => await firebase.auth().currentUser.getIdToken(),
+  getToken: async (refresh = false) => {
+    const token = await firebase.auth().currentUser.getIdToken(refresh)
+    return token
+  },
 }

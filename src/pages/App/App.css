@@ -23,6 +23,21 @@
   color: #61dafb;
 }
 
+.btn-floating {
+  @apply shadow-md relative block;
+  transition: all 0.15s;
+}
+
+.btn-floating:hover {
+  @apply shadow-lg;
+  transform: translateY(-1px);
+}
+
+.btn-floating:active {
+  @apply shadow;
+  transform: translateY(0);
+}
+
 @keyframes App-logo-spin {
   from {
     transform: rotate(0deg);

@@ -15,7 +15,7 @@ export const FormGroup = ({ className, title, error, children }) => (
   </div>
 )
 
-const textInputStyle = error =>
+export const textInputStyle = error =>
   'shadow appearance-none border rounded w-full py-2 px-3 ' +
   'text-grey-500 leading-tight focus:outline-none focus:shadow-outline ' +
   (error ? 'border-red-400' : 'border-grey-200')

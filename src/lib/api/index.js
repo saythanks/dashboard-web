@@ -1,5 +1,6 @@
 import axios from 'axios'
 import config from '../../config'
+import jwtDecode from 'jwt-decode'
 
 class ApiClient {
   constructor() {
@@ -7,6 +8,27 @@ class ApiClient {
     this.instance = axios.create({
       baseURL: config.api.baseUrl,
     })
+    this.expires = new Date()
+
+    // Make sure token is authenticated
+    this.instance.interceptors.request.use(
+      req => {
+        const original = req
+        console.log('intercepting')
+        if (this.isExpired()) {
+          console.log('token expired')
+          this.updateHeaders()
+          const token = this.getToken()
+          const header = `Bearer ${token}`
+          original.headers['Authorization'] = header
+          console.log('setting headers: ' + header)
+          return Promise.resolve(original)
+        }
+
+        return original
+      },
+      err => Promise.reject(err)
+    )
   }
 
   setTokenGetter(fn) {
@@ -17,52 +39,23 @@ class ApiClient {
     return !!this.token
   }
 
+  isExpired() {
+    return new Date() - this.expires >= 0
+  }
+
   updateHeaders = async () => {
-    const header = `Bearer ${this.getToken()}`
+    const token = this.getToken()
+    const header = `Bearer ${token}`
+    this.expires = new Date(jwtDecode(token).exp * 1000)
     this.instance.defaults.headers.common['Authorization'] = header
   }
 
-  get = async (...args) => {
-    this.updateHeaders()
-    return (await this.instance.get(...args)).data
-  }
-
-  post = async (...args) => {
-    this.updateHeaders()
-    return (await this.instance.post(...args)).data
-  }
-
-  put = async (...args) => {
-    this.updateHeaders()
-    return (await this.instance.put(...args)).data
-  }
-
-  patch = async (...args) => {
-    this.updateHeaders()
-    return (await this.instance.patch(...args)).data
-  }
-
-  delete = async (...args) => {
-    this.updateHeaders()
-    return (await this.instance.delete(...args)).data
-  }
+  get = async (...args) => (await this.instance.get(...args)).data
+  post = async (...args) => (await this.instance.post(...args)).data
+  put = async (...args) => (await this.instance.put(...args)).data
+  patch = async (...args) => (await this.instance.patch(...args)).data
+  delete = async (...args) => (await this.instance.delete(...args)).data
 }
 
 const api = new ApiClient()
 export default api
-
-// const restify = (url, nested = {}) => api => ({
-//   list: () => api.get(url),
-//   get: id => api.get(`${url}/${id}`),
-//   create: id => api.post(`${url}`),
-//   update: id => api.patch(`${url}/${id}`),
-//   delete: id => api.delete(`${url}/${id}`),
-//   ...nested,
-// })
-// class RestApi extends ApiClient {
-//   constructor({ url, ...endpoints }) {}
-// }
-
-// const api = RestApi({
-//   url: 'http://localhost:5000',
-// })

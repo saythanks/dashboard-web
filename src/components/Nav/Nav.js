@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom'
 
 const Nav = ({ logout, user }) => {
   return (
-    <nav className="bg-white border-b border-grey-100">
+    <nav className="bg-white border-grey-100 shadow-md">
       <div className="bg-pink-400 h-1 w-full" />
       <div className="container mx-auto py-6 px-6 sm:px-0 flex justify-between items-baseline">
         <section>

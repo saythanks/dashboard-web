@@ -3,7 +3,7 @@ import IntegrationForm from './IntegrationForm'
 
 const Create = ({ app }) => {
   return (
-    <div className="max-w-sm mx-auto">
+    <div className="container mx-auto">
       <IntegrationForm app={app} />
     </div>
   )

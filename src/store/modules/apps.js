@@ -9,10 +9,11 @@ export default {
     // SET_CURRENT_APP: (state, app) => ({ ...state, currentApp: app }),
     // SET_PAYABLES: (state, app) => ({ ...state, payables: app }),
 
-    SET_APP: (state, app) => ({
-      ...state,
-      [app.id]: app,
-    }),
+    SET_APP: (state, app) => {
+      let s = state
+      s[app.id] = app
+      return s
+    },
 
     DELETE_APP: (state, id) => {
       const all = state

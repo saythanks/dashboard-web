@@ -109,9 +109,22 @@ const Wrap = ({ children }) => (
 )
 
 const Apps = ({ apps, loadApps }) => {
+  const [loading, setLaoding] = useState(true)
+
   useEffect(() => {
     loadApps()
   }, [])
+
+  useEffect(() => {
+    if (apps) setLaoding(false)
+  }, apps)
+
+  if (loading) return <div>Loading</div>
+
+  const sortedApps = [].concat(Object.keys(apps))
+  sortedApps.sort(
+    (a, b) => new Date(apps[a].time_created) - new Date(apps[b]).time_created
+  )
 
   return (
     <div className="flex flex-col items-stretch mb-20">
@@ -127,7 +140,7 @@ const Apps = ({ apps, loadApps }) => {
             </Wrap>
           </>
         )}
-        {Object.keys(apps).map(id => (
+        {sortedApps.map(id => (
           <Wrap key={id}>
             <App app={apps[id]} />
           </Wrap>
@@ -143,6 +156,7 @@ const Apps = ({ apps, loadApps }) => {
 
 const mapState = ({ apps }) => ({ apps })
 const mapDispatch = ({ apps }) => ({ loadApps: apps.list })
+
 export default connect(
   mapState,
   mapDispatch

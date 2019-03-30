@@ -31,6 +31,8 @@ export default {
       const unsub = auth.listen(user => {
         if (!user) dispatch.auth.RESET_AUTH()
         else {
+          console.log(user)
+          api.setTokenGetter(() => auth.getToken())
           user
             .getIdToken()
             .then(idToken => {
