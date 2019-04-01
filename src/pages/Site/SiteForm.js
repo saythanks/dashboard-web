@@ -9,6 +9,24 @@ import * as yup from 'yup'
 const IntegrationForm = ({ create, update, app, edit, destroy, appId }) => {
   const [success, setSuccess] = useState(false)
 
+  const [widget] = useState(
+    //eslint-disable-next-line
+    cloudinary.createUploadWidget(
+      {
+        cloudName: 'saythanks',
+        uploadPreset: 'app_img',
+        cropping: true,
+        croppingAspectRatio: 1,
+      },
+      (error, result) => {
+        if (error) return console.error(error)
+        if (result.event !== 'success') return
+        console.log(result)
+        onChange('image')(result.info.secure_url)
+      }
+    )
+  )
+
   const handleSubmit = values => {
     create(values)
       .then(id => {
@@ -49,22 +67,6 @@ const IntegrationForm = ({ create, update, app, edit, destroy, appId }) => {
   })
 
   if (success) return <Redirect to="/" />
-
-  // eslint-disable-next-line
-  const widget = cloudinary.createUploadWidget(
-    {
-      cloudName: 'saythanks',
-      uploadPreset: 'app_img',
-      cropping: true,
-      croppingAspectRatio: 1,
-    },
-    (error, result) => {
-      if (error) return console.error(error)
-      if (result.event !== 'success') return
-      console.log(result)
-      onChange('image')(result.info.secure_url)
-    }
-  )
 
   return (
     <form
