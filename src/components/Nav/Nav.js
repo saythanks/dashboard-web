@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom'
 const Nav = ({ logout, user }) => {
   return (
     <nav className="bg-pink-800 border-grey-100 shadow-md pb-24">
-      {/* <div className="bg-pink-400 h-1 w-full" /> */}
+      <div className="bg-pink-900 h-1 w-full" />
       <div className="container mx-auto py-6 px-6 sm:px-0 flex justify-between items-baseline">
         <section>
           <Link to="/" className="no-underline">

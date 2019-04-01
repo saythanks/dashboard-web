@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Input, TextArea } from '../../components/Form'
+import { Input, TextArea, FormGroup } from '../../components/Form'
 import { SecondaryButton, PrimaryButton } from '../../components/Button'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
@@ -30,12 +30,17 @@ const IntegrationForm = ({ create, update, app, edit, destroy, appId }) => {
     initialValues: {
       name: app ? app.name : '',
       description: app ? app.description : '',
+      image: app ? app.image_url : '',
       url: app ? app.url : '',
     },
     onSubmit: handleSubmit,
     schema: {
       name: yup.string().required('Name is required'),
       description: yup.string().required('Description is required'),
+      image: yup
+        .string()
+        .url()
+        .required(),
       url: yup
         .string()
         .url('Must be a valid url (with http:// or https://)')
@@ -44,6 +49,22 @@ const IntegrationForm = ({ create, update, app, edit, destroy, appId }) => {
   })
 
   if (success) return <Redirect to="/" />
+
+  // eslint-disable-next-line
+  const widget = cloudinary.createUploadWidget(
+    {
+      cloudName: 'saythanks',
+      uploadPreset: 'app_img',
+      cropping: true,
+      croppingAspectRatio: 1,
+    },
+    (error, result) => {
+      if (error) return console.error(error)
+      if (result.event !== 'success') return
+      console.log(result)
+      onChange('image')(result.info.secure_url)
+    }
+  )
 
   return (
     <form
@@ -63,14 +84,32 @@ const IntegrationForm = ({ create, update, app, edit, destroy, appId }) => {
         </>
       )}
 
-      <Input
-        title="Name"
-        placeholder="e.g. 'Ben Jones' or 'My Blog Name'"
-        value={values.name}
-        error={errors.name}
-        onBlur={onBlur('name')}
-        onChange={onChange('name')}
-      />
+      <div className="flex items-center">
+        <FormGroup className="inline-block text-center mr-6">
+          <button
+            type="button"
+            className="font-bold underline text-grey-500 text-sm focus:outline-none hover:text-grey-700"
+            onClick={() => widget.open()}
+          >
+            <img
+              src={values.image}
+              className="w-16 hover:bg-grey-050 h-16 border border-grey-200 rounded-full block mb-2"
+              alt=""
+            />
+            Set Image
+          </button>
+        </FormGroup>
+
+        <Input
+          title="Name"
+          className="inline-block flex-1"
+          placeholder="e.g. 'Ben Jones' or 'My Blog Name'"
+          value={values.name}
+          error={errors.name}
+          onBlur={onBlur('name')}
+          onChange={onChange('name')}
+        />
+      </div>
       <TextArea
         title="Description"
         placeholder="A couple sentences about who or what you are"
@@ -79,6 +118,7 @@ const IntegrationForm = ({ create, update, app, edit, destroy, appId }) => {
         onBlur={onBlur('description')}
         onChange={onChange('description')}
       />
+
       <Input
         title="Public URL"
         type="url"

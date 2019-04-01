@@ -7,7 +7,7 @@ html,
 #root {
   height: 100%;
   @apply font-sans;
-  @apply bg-grey-050;
+  @apply bg-grey-025;
 }
 
 @tailwind utilities;

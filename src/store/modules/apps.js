@@ -36,8 +36,8 @@ export default {
       dispatch.apps.SET_APPS(apps)
     },
 
-    async create({ name, description, url }) {
-      const app = await api.post('/apps', { name, description, url })
+    async create({ name, description, url, image }) {
+      const app = await api.post('/apps', { name, description, url, image })
 
       dispatch.apps.SET_APP(app)
       return app.id
