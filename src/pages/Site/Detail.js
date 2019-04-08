@@ -14,6 +14,9 @@ import { useForm } from '../../hooks/useForm'
 import * as yup from 'yup'
 import Card from '../../components/Card'
 import PageTitleCard from '../../components/PageTitleCard'
+import api from '../../lib/api/index'
+import { formatCents } from '../../util/currency'
+import moment from 'moment'
 
 const NewIntegrationCard = ({ app }) => {
   const {
@@ -227,6 +230,72 @@ const AppTitleCard = ({ match, app, className }) => (
   </PageTitleCard>
 )
 
+const TxRow = ({ tx }) => (
+  <div className="flex justify-between py-2 hover:bg-grey-025 -mx-4 px-4">
+    <div>
+      <div className="inline-block text-grey-800 text-lg font-normal">
+        {formatCents(tx.amount)}
+      </div>
+      <div className="ml-2 inline-block text-grey-300 font-medium">
+        {moment(tx.time_created).fromNow()}
+      </div>
+    </div>
+    <div>
+      {tx.user.name && (
+        <p className="text-grey-500">
+          from <span className="text-grey-800 font-medium">{tx.user.name}</span>
+        </p>
+      )}
+    </div>
+  </div>
+)
+
+const TxListCard = ({ appId }) => {
+  const [tx, setTx] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [page, setPage] = useState(1)
+
+  useEffect(() => {
+    setLoading(true)
+    api
+      .get('/transactions/to', { params: { app: appId, page } })
+      .then(tx => setTx(tx))
+      .finally(() => setLoading(false))
+  }, [page, appId])
+
+  console.log(tx)
+
+  return (
+    <Card>
+      <h2 className="block mr-6 mb-4 uppercase tracking-wide font-semibold text-base text-grey-600">
+        Transactions
+      </h2>
+
+      {loading ? (
+        <Spinner />
+      ) : !tx || tx.items.length === 0 ? (
+        'Nothing Yet'
+      ) : (
+        <div>
+          {tx.items.map(t => (
+            <TxRow tx={t} key={t.id} />
+          ))}
+          {tx.has_prev && (
+            <button className="" onClick={() => setPage(page - 1)}>
+              Prev
+            </button>
+          )}
+          {tx.has_next && (
+            <button className="" onClick={() => setPage(page + 1)}>
+              Next
+            </button>
+          )}
+        </div>
+      )}
+    </Card>
+  )
+}
+
 const Detail = ({ match, app, payables, loadApp, loadPayables }) => {
   useEffect(() => {
     if (!match.params.id) return
@@ -260,13 +329,7 @@ const Detail = ({ match, app, payables, loadApp, loadPayables }) => {
               <NewIntegrationCard app={app} />
             </div>
             <div className="md:w-1/2 m-0 px-4 pt-12 sm:pt-0">
-              <Card>
-                <h2 className="block mr-6 mb-4 uppercase tracking-wide font-semibold text-base text-grey-600">
-                  Transactions
-                </h2>
-
-                <Spinner />
-              </Card>
+              <TxListCard appId={match.params.id} />
             </div>
           </div>
         )}
