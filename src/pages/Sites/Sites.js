@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
+import { formatCents } from '../../util/currency'
 
 const types = {
   red: '#FF5A52',
@@ -97,6 +98,10 @@ const App = ({ app }) => {
           <h2 className="mt-3 mb-4">{app.name}</h2>
           <p className="leading-normal mb-4 text-grey-400 text-lg">
             {app.description}
+          </p>
+
+          <p className="leading-normal mb-4 text-pink-500 text-lg">
+            {formatCents(app.balance)}
           </p>
         </section>
       </div>

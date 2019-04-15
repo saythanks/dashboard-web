@@ -34,15 +34,12 @@ const NewIntegrationCard = ({ app }) => {
     schema: {
       theme: yup.mixed().oneOf(['solid', 'hollow', 'minimal']),
       price: yup.string(),
-      name: yup.string().required(),
-      url: yup
-        .string()
-        .url()
-        .required(),
+      name: yup.string(),
+      url: yup.string().url(),
     },
   })
 
-  const [showDetail, setShowDetail] = useState(false)
+  const [showDetail, setShowDetail] = useState(true)
 
   const actionUrl = () => {
     let action = `${config.wallet.baseUrl}/to/${app.id}\n\t?price=${price}`
@@ -66,7 +63,7 @@ const NewIntegrationCard = ({ app }) => {
   return (
     <Card>
       <h2 className="inline-block mr-6 mb-4 uppercase tracking-wide font-semibold text-base text-grey-600">
-        Create an Integration
+        Create your Button
       </h2>
 
       <p className="font-normal leading-normal mb-6 text-grey-500">
@@ -76,16 +73,16 @@ const NewIntegrationCard = ({ app }) => {
       </p>
 
       <div className="sm:-mx-2 sm:flex items-start">
-        <Select
+        {/* <Select
           title="Type"
           className="sm:w-1/2 w-full m-0 inline-block px-0 sm:px-2"
           value={showDetail ? 'spef' : 'gen'}
           onChange={val => setShowDetail(val === 'spef')}
           options={{
-            gen: 'Generic',
-            spef: 'Content Specific',
+            gen: 'Generic Tip',
+            spef: 'Content Tip',
           }}
-        />
+        /> */}
         <Select
           title="Theme"
           className="sm:w-1/2 w-full m-0 inline-block px-0 sm:px-2"
@@ -117,12 +114,14 @@ const NewIntegrationCard = ({ app }) => {
             title="Content Title"
             className="sm:w-1/2 w-full m-0 inline-block px-0 sm:px-2"
             model={fields.name}
+            placeholder="Optional"
           />
           <Input
             title="Content URL"
             className="sm:w-1/2 w-full m-0 inline-block px-0 sm:px-2"
             type="url"
             model={fields.url}
+            placeholder="Optional"
           />
         </div>
       )}
@@ -187,6 +186,9 @@ const NewIntegrationCard = ({ app }) => {
   </Tabs> */}
 
         <div className="bg-grey-050 -mx-4 -mb-6 px-4 py-6 mt-4 text-center">
+          <p className="uppercase tracking-wide text-grey-500 font-semibold mb-4">
+            Button Preview
+          </p>
           <div
             dangerouslySetInnerHTML={{
               __html: getCodeStringHTML(),
@@ -207,8 +209,11 @@ const AppTitleCard = ({ match, app, className }) => (
         {app.url}
       </a>
     </p>
+    <p className="mt-4 text-xl text-grey-800">
+      <span className="font-bold">{formatCents(app.balance)}</span> earned
+    </p>
     <div className="mt-4 sm:-mx-2 sm:flex items-center">
-      <Link
+      {/* <Link
         to={`${match.url}/settings`}
         className="btn-floating bg-white px-4 py-2 border border-grey-100 rounded-full active:bg-grey-100 hover:bg-grey-050 no-underline 
                     sm:mx-2 mb-2 sm:mb-0 inline-flex items-baseline uppercase text-sm font-semibold text-grey-500
@@ -225,7 +230,7 @@ const AppTitleCard = ({ match, app, className }) => (
       >
         <i className="fas fa-dollar-sign text-grey-200 text-sm mr-2" />
         <span className="">Cash out</span>
-      </Link>
+      </Link> */}
     </div>
   </PageTitleCard>
 )
@@ -280,16 +285,24 @@ const TxListCard = ({ appId }) => {
           {tx.items.map(t => (
             <TxRow tx={t} key={t.id} />
           ))}
-          {tx.has_prev && (
-            <button className="" onClick={() => setPage(page - 1)}>
-              Prev
-            </button>
-          )}
-          {tx.has_next && (
-            <button className="" onClick={() => setPage(page + 1)}>
-              Next
-            </button>
-          )}
+          <div className="mt-4">
+            {tx.has_prev && (
+              <button
+                className="bg-grey-050 rounded shadow border border-grey-100 px-2 py-1"
+                onClick={() => setPage(page - 1)}
+              >
+                Previous
+              </button>
+            )}
+            {tx.has_next && (
+              <button
+                className="bg-grey-050 rounded shadow border border-grey-100 px-2 py-1"
+                onClick={() => setPage(page + 1)}
+              >
+                Next
+              </button>
+            )}
+          </div>
         </div>
       )}
     </Card>
