@@ -23,6 +23,7 @@ import Slider from 'rc-slider'
 import 'rc-slider/assets/index.css'
 import { lighten } from '../../util/color'
 import { publicUrlTo } from '../../util/url'
+import { BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts'
 
 const NewIntegrationCard = ({ app }) => {
   const colors = [
@@ -278,6 +279,69 @@ const AppTitleCard = ({ match, app, className }) => (
   </PageTitleCard>
 )
 
+const TxChartCard = ({ appId, className }) => {
+  const [tx, setTx] = useState(null)
+  const [loading, setLoading] = useState(true)
+  const [page, setPage] = useState(1)
+
+  useEffect(() => {
+    setLoading(true)
+    api
+      .get('/transactions/to', { params: { app: appId, page } })
+      .then(tx => setTx(tx))
+      .finally(() => setLoading(false))
+  }, [page, appId])
+
+  let data = !tx
+    ? []
+    : tx.items
+        .map(t => ({
+          name: moment(t.time_created).format('M/DD'),
+          amount: t.amount,
+        }))
+        .reverse()
+
+  console.log(data)
+
+  let dummyData = [
+    { name: '4-01', amount: 3.7 },
+    { name: '4-02', amount: 14.9 },
+    { name: '4-03', amount: 1.4 },
+  ]
+
+  return (
+    <Card className={className}>
+      <h2 className="block mr-6 mb-4 uppercase tracking-wide font-semibold text-base text-grey-600">
+        Recent Transactions
+      </h2>
+
+      {loading ? (
+        <Spinner />
+      ) : data.length === 0 ? (
+        'Nothing Yet'
+      ) : (
+        <div>
+          <BarChart
+            width={500}
+            height={250}
+            data={data}
+            margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+          >
+            <Bar dataKey="amount" fill="#DA127D" />
+            <XAxis dataKey="name" />
+            <YAxis tickFormatter={t => formatCents(parseInt(t))} />
+            {/* <Tooltip formatter={t => formatCents(100 * parseInt(t))} /> */}
+            <Tooltip
+              cursor={{ fill: 'red', fillOpacity: 0.05 }}
+              formatter={(v, n, p) => formatCents(parseInt(v))}
+            />
+          </BarChart>
+        </div>
+      )}
+    </Card>
+  )
+}
+
 const TxRow = ({ tx }) => (
   <div className="flex justify-between py-2 hover:bg-grey-025 -mx-4 px-4">
     <div>
@@ -380,11 +444,12 @@ const Detail = ({ match, app, payables, loadApp, loadPayables }) => {
         exact
         render={() => (
           <div className="md:flex -mx-4">
-            <div className="   md:w-1/2 m-0 px-4">
+            <div className="md:w-1/2 m-0 px-4">
               <AppTitleCard match={match} app={app} className="mb-12" />
               <NewIntegrationCard app={app} />
             </div>
             <div className="md:w-1/2 m-0 px-4 pt-12 sm:pt-0">
+              <TxChartCard appId={match.params.id} className="mb-12" />
               <TxListCard appId={match.params.id} />
             </div>
           </div>
