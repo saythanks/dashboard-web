@@ -23,7 +23,7 @@ import Slider from 'rc-slider'
 import 'rc-slider/assets/index.css'
 import { lighten } from '../../util/color'
 import { publicUrlTo } from '../../util/url'
-import { BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts';
+import { BarChart, Bar, XAxis, YAxis, Tooltip } from 'recharts'
 
 const NewIntegrationCard = ({ app }) => {
   const colors = [
@@ -292,21 +292,28 @@ const TxChartCard = ({ appId, className }) => {
       .finally(() => setLoading(false))
   }, [page, appId])
 
-  
-  let data = (!tx || tx.items.length === 0) 
-                ? []
-                : tx.items.map(t => ({"name": moment(t.time_created).format("M-DD"), "amt": formatCents(tx.amount)}));
+  let data = !tx
+    ? []
+    : tx.items
+        .map(t => ({
+          name: moment(t.time_created).format('M/DD'),
+          amount: t.amount,
+        }))
+        .reverse()
 
-  // let dummyData = [{"name": "4-01", "amount": 3.70},
-  //         {"name": "4-02", "amount": 14.90},
-  //         {"name": "4-03", "amount": 1.40}];
+  console.log(data)
+
+  let dummyData = [
+    { name: '4-01', amount: 3.7 },
+    { name: '4-02', amount: 14.9 },
+    { name: '4-03', amount: 1.4 },
+  ]
 
   return (
     <Card className={className}>
       <h2 className="block mr-6 mb-4 uppercase tracking-wide font-semibold text-base text-grey-600">
-        Chart
+        Recent Transactions
       </h2>
-
 
       {loading ? (
         <Spinner />
@@ -314,18 +321,26 @@ const TxChartCard = ({ appId, className }) => {
         'Nothing Yet'
       ) : (
         <div>
-          <BarChart width={500} height={400} data={data} margin={{ top: 20, right: 20, bottom: 20, left: 20}}>
+          <BarChart
+            width={500}
+            height={250}
+            data={data}
+            margin={{ top: 20, right: 20, bottom: 20, left: 20 }}
+          >
             <Bar dataKey="amount" fill="#DA127D" />
             <XAxis dataKey="name" />
-            <YAxis tickFormatter={t => formatCents(100*parseInt(t))}/>
-            {/* <Tooltip formatter={t => formatCents(100*parseInt(t))}/> */}
+            <YAxis tickFormatter={t => formatCents(parseInt(t))} />
+            {/* <Tooltip formatter={t => formatCents(100 * parseInt(t))} /> */}
+            <Tooltip
+              cursor={{ fill: 'red', fillOpacity: 0.05 }}
+              formatter={(v, n, p) => formatCents(parseInt(v))}
+            />
           </BarChart>
         </div>
       )}
     </Card>
   )
 }
-
 
 const TxRow = ({ tx }) => (
   <div className="flex justify-between py-2 hover:bg-grey-025 -mx-4 px-4">
@@ -443,7 +458,6 @@ const Detail = ({ match, app, payables, loadApp, loadPayables }) => {
     </div>
   )
 }
-
 
 const mapState = ({ apps, payables }, { match }) => ({
   app: apps[match.params.id],
