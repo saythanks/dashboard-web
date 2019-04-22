@@ -135,7 +135,7 @@ const Apps = ({ apps, loadApps }) => {
     (a, b) => new Date(apps[a].time_created) - new Date(apps[b]).time_created
   )
 
-  if (true || !apps || Object.keys(apps).length === 0)
+  if (!apps || Object.keys(apps).length === 0)
     return (
       <div className="flex flex-col items-center justify-center">
         <EmptyDrawing height={200} />
