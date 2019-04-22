@@ -4,7 +4,7 @@ import SiteForm from './SiteForm'
 const Create = () => {
   return (
     <div className="mx-auto container">
-      <div className="w-full mx-auto max-w-sm -mt-32">
+      <div className="w-full mx-auto max-w-sm ">
         <SiteForm />
       </div>
     </div>

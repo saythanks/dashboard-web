@@ -154,6 +154,8 @@ let colors = {
   'pink-700': '#A30664',
   'pink-800': '#870557',
   'pink-900': '#620042',
+
+  'google-red': '#E94235',
 }
 
 module.exports = {

@@ -7,7 +7,7 @@ import SyntaxHighlighter from 'react-syntax-highlighter'
 import 'react-tabs/style/react-tabs.css'
 import { monokaiSublime } from 'react-syntax-highlighter/dist/esm/styles/hljs'
 import config from '../../config'
-import { Select, Input } from '../../components/Form'
+import { Select, Input, FormGroup } from '../../components/Form'
 import useClipboard from '../../hooks/useClipboard'
 import { toast } from 'react-toastify'
 import { useForm } from '../../hooks/useForm'
@@ -17,15 +17,32 @@ import PageTitleCard from '../../components/PageTitleCard'
 import api from '../../lib/api/index'
 import { formatCents } from '../../util/currency'
 import moment from 'moment'
+import Avatar from 'react-avatar'
+import ThemePicker from '../../components/ThemePicker/ThemePicker'
+import Slider from 'rc-slider'
+import 'rc-slider/assets/index.css'
+import { lighten } from '../../util/color'
+import { publicUrlTo } from '../../util/url'
 
 const NewIntegrationCard = ({ app }) => {
+  const colors = [
+    ['#E8368F', 'white'],
+    ['#E12D39', 'white'],
+    ['#f6993f', 'white'],
+    ['#38c172', 'white'],
+    ['#3490dc', 'white'],
+    ['white', '#E8368F'],
+    ['white', 'black'],
+  ]
   const {
     fields,
-    values: { price, theme, name, url },
+    onChange,
+    values: { price, theme, color, name, url },
   } = useForm({
     validateOnChange: true,
     initialValues: {
       theme: 'solid',
+      color: colors[0],
       price: 50,
       name: '',
       url: '',
@@ -56,34 +73,65 @@ const NewIntegrationCard = ({ app }) => {
   <img src="${imgUrl()}" alt="Say Thanks" width="250" height="40" />
 </a>`
 
+  const htmlCode = () =>
+    `
+<style>
+.st-button {
+  background: ${color[0]}; 
+  color: ${color[1]}; 
+  border-radius: 9999px;
+  padding: 5px 15px;
+  font-weight: bold;
+  font-family: brandon-grotesque, sans-serif;
+  box-shadow: 0 2px 4px rgba(0,0,0.04,.15);
+  text-decoration: none;
+  transition: all .15s;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.st-button:hover {
+  background-color: ${lighten(color[0], 10)}
+}
+
+.st-button>img {
+  display: inline-block;
+  margin-right: 10px;
+
+}
+</style>
+<a href="${actionUrl()}" target="_blank" class="st-button"><img src="${publicUrlTo(
+      color[0] === 'white' ? 'LogoB.svg' : 'logo_light.svg'
+    )}" width="20" />Say thanks for ${formatCents(price)}</a>
+`
+
   const getCodeStringMD = () => `[![SayThanks](${imgUrl()})](${actionUrl()})`
 
   const { copy } = useClipboard()
 
   return (
-    <Card>
+    <Card className="text-center">
       <h2 className="inline-block mr-6 mb-4 uppercase tracking-wide font-semibold text-base text-grey-600">
-        Create your Button
+        Create a Button
       </h2>
 
-      <p className="font-normal leading-normal mb-6 text-grey-500">
-        Use a generic integration if you want users's to just tip you or your
-        app. A content specific integration will show users the name you specify
-        when they tip.
+      <p className="font-normal leading-normal mb-6 text-grey-500 px-12">
+        Add a button to your page to allow anyone to tip your content. Just pick
+        your color and suggested price.
       </p>
+
+      <ThemePicker
+        colors={colors}
+        value={color}
+        onChange={onChange('color')}
+        className="block mt-4"
+      />
 
       <div className="sm:-mx-2 sm:flex items-start">
         {/* <Select
-          title="Type"
-          className="sm:w-1/2 w-full m-0 inline-block px-0 sm:px-2"
-          value={showDetail ? 'spef' : 'gen'}
-          onChange={val => setShowDetail(val === 'spef')}
-          options={{
-            gen: 'Generic Tip',
-            spef: 'Content Tip',
-          }}
-        /> */}
-        <Select
           title="Theme"
           className="sm:w-1/2 w-full m-0 inline-block px-0 sm:px-2"
           model={fields.theme}
@@ -92,23 +140,30 @@ const NewIntegrationCard = ({ app }) => {
             solid: 'Solid',
             hollow: 'Hollow',
           }}
-        />
+        /> */}
 
-        <Select
-          title="Suggested Price"
-          className="sm:w-1/2 w-full m-0 inline-block px-0 sm:px-2"
-          options={{
-            10: '$0.10',
-            25: '$0.25',
-            50: '$0.50',
-            75: '$0.75',
-            100: '$1.00',
-          }}
-          model={fields.price}
-        />
+        <div className="px-12 max-w-sm block w-full mx-auto my-12">
+          <label className="mb-6 text-grey-400 font-medium text-sm uppercase tracking-wide">
+            Suggested Price
+          </label>
+          <Slider
+            min={10}
+            className="block mt-4"
+            marks={{
+              10: '10¢',
+              25: '25¢',
+              50: '50¢',
+              75: '75¢',
+              100: '$1.00',
+            }}
+            value={price}
+            onChange={onChange('price')}
+            step={null}
+          />
+        </div>
       </div>
 
-      {showDetail && (
+      {false && showDetail && (
         <div className="sm:-mx-2 sm:flex items-start">
           <Input
             title="Content Title"
@@ -127,74 +182,52 @@ const NewIntegrationCard = ({ app }) => {
       )}
 
       <div className="w-full">
-        <button
-          className="border border-grey-100 w-full p-2 mb-2 rounded-full 
+        <div className="flex flex-wrap">
+          <div className="w-full sm:w-1/2 sm:pr-2">
+            <button
+              className="border border-grey-100 w-full p-2 mb-2 rounded-full
+                    text-grey-500 font-bold uppercase tracking-wide text-sm btn-floating focus:outline-none"
+              onClick={() =>
+                copy(htmlCode(), () => toast.success('Copied Code'))
+              }
+            >
+              {/* <i className="fas fa-clipboard text-grey-200 mr-2" /> */}
+              <div>
+                <p>Copy HTML Code</p>
+                <p className="normal-case text-sm font-normal text-grey-300">
+                  For websites, blogs, Wordpress, etc.
+                </p>
+              </div>
+            </button>
+          </div>
+          <div className="w-full sm:w-1/2 sm:pl-2">
+            <button
+              className="border border-grey-100 w-full p-2 mb-2 rounded-full
                     text-grey-500 font-bold uppercase tracking-wide text-sm btn-floating"
-          onClick={() =>
-            copy(getCodeStringHTML(), () => toast.success('Copied Code'))
-          }
-        >
-          <i className="fas fa-clipboard text-grey-200 mr-2" />
-          Copy HTML Code
-        </button>
-        <SyntaxHighlighter
-          language="html"
-          className="rounded shadow-md text-left"
-          style={monokaiSublime}
-          codeTagProps={{ style: { fontSize: '12px' } }}
-        >
-          {getCodeStringHTML()}
-        </SyntaxHighlighter>
-        {/* <Tabs>
-    <TabList className=" list-reset mb-2">
-      <div>
-        <Tab
-          className="inline-block bg-none cursor-pointer px-4 font-medium text-sm pb-2 text-grey-600 uppercase tracking-wide focus:outline-none"
-          selectedClassName="border-b-2 border-pink-300 text-pink-500"
-        >
-          HTML
-        </Tab>
-        <Tab
-          className="inline-block bg-none cursor-pointer px-4 font-medium text-sm pb-2 text-grey-600 uppercase tracking-wide focus:outline-none"
-          selectedClassName="border-b-2 border-pink-300 text-pink-500"
-        >
-          Markdown
-        </Tab>
-      </div>
-    </TabList>
-
-    <TabPanel>
-      <SyntaxHighlighter
-        lang="html"
-        className="rounded shadow-md"
-        style={monokaiSublime}
-        codeTagProps={{ style: { fontSize: '12px' } }}
-      >
-        {getCodeStringHTML()}
-      </SyntaxHighlighter>
-    </TabPanel>
-    <TabPanel>
-      <SyntaxHighlighter
-        lang="markdown"
-        className="rounded shadow-md"
-        style={monokaiSublime}
-        codeTagProps={{ style: { fontSize: '12px' } }}
-      >
-        {getCodeStringMD()}
-      </SyntaxHighlighter>
-    </TabPanel>
-  </Tabs> */}
-
-        <div className="bg-grey-050 -mx-4 -mb-6 px-4 py-6 mt-4 text-center">
-          <p className="uppercase tracking-wide text-grey-500 font-semibold mb-4">
-            Button Preview
-          </p>
-          <div
-            dangerouslySetInnerHTML={{
-              __html: getCodeStringHTML(),
-            }}
-          />
+              onClick={() =>
+                copy(htmlCode(), () => toast.success('Copied Code'))
+              }
+            >
+              {/* <i className="fas fa-clipboard text-grey-200 mr-2" /> */}
+              <div>
+                <p>Copy Image Code</p>
+                <p className="normal-case text-sm font-normal text-grey-300">
+                  For Github, Tumblr, etc.
+                </p>
+              </div>
+            </button>
+          </div>
         </div>
+      </div>
+      <div className="bg-grey-050 -mx-4 -mb-6 px-4 py-6 mt-4 text-center">
+        <p className="uppercase tracking-wide text-grey-500 font-semibold mb-4">
+          Live Button Preview
+        </p>
+        <div
+          dangerouslySetInnerHTML={{
+            __html: htmlCode(),
+          }}
+        />
       </div>
     </Card>
   )
@@ -202,7 +235,17 @@ const NewIntegrationCard = ({ app }) => {
 
 const AppTitleCard = ({ match, app, className }) => (
   <PageTitleCard title={app.name} className={className}>
-    <p className="text-lg leading-normal text-grey-600 ">
+    <p className="text-lg leading-normal text-grey-600">
+      <div className="-mt-12">
+        <Avatar
+          name={app.name}
+          src={app.image_url}
+          size={60}
+          round
+          className="shadow"
+        />
+      </div>
+      <h1 className="text-3xl mb-2 text-grey-800">{app.name}</h1>
       {app.description}{' '}
       <a href={app.url} className="ml-2 font-normal text-cyan-700">
         <i className="fas fa-link text-xs mr-1 opacity-50" />
@@ -210,10 +253,10 @@ const AppTitleCard = ({ match, app, className }) => (
       </a>
     </p>
     <p className="mt-4 text-xl text-grey-800">
-      <span className="font-bold">{formatCents(app.balance)}</span> earned
+      <span className="font-bold">{formatCents(app.balance)}</span> in balance
     </p>
     <div className="mt-4 sm:-mx-2 sm:flex items-center">
-      {/* <Link
+      <Link
         to={`${match.url}/settings`}
         className="btn-floating bg-white px-4 py-2 border border-grey-100 rounded-full active:bg-grey-100 hover:bg-grey-050 no-underline 
                     sm:mx-2 mb-2 sm:mb-0 inline-flex items-baseline uppercase text-sm font-semibold text-grey-500
@@ -222,7 +265,7 @@ const AppTitleCard = ({ match, app, className }) => (
         <i className="fas fa-cog text-grey-200 text-sm mr-2" />
         <span className="">Site Settings</span>
       </Link>
-      <Link
+      {/* <Link
         to={`${match.url}/cashout`}
         className="btn-floating bg-white px-4 py-2 border border-grey-100 rounded-full active:bg-grey-100 hover:bg-grey-050 no-underline 
                    sm:mx-2 inline-flex items-baseline uppercase text-sm font-semibold text-grey-500
@@ -282,13 +325,10 @@ const TxListCard = ({ appId }) => {
         'Nothing Yet'
       ) : (
         <div>
-          {tx.items.map(t => (
-            <TxRow tx={t} key={t.id} />
-          ))}
-          <div className="mt-4">
+          <div className="mb-4">
             {tx.has_prev && (
               <button
-                className="bg-grey-050 rounded shadow border border-grey-100 px-2 py-1"
+                className="bg-grey-050 rounded shadow border border-grey-100 px-2 py-1 mr-2"
                 onClick={() => setPage(page - 1)}
               >
                 Previous
@@ -303,6 +343,9 @@ const TxListCard = ({ appId }) => {
               </button>
             )}
           </div>
+          {tx.items.map(t => (
+            <TxRow tx={t} key={t.id} />
+          ))}
         </div>
       )}
     </Card>
@@ -337,7 +380,7 @@ const Detail = ({ match, app, payables, loadApp, loadPayables }) => {
         exact
         render={() => (
           <div className="md:flex -mx-4">
-            <div className="-mt-32 md:w-1/2 m-0 px-4">
+            <div className="   md:w-1/2 m-0 px-4">
               <AppTitleCard match={match} app={app} className="mb-12" />
               <NewIntegrationCard app={app} />
             </div>

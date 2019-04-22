@@ -6,7 +6,7 @@ const actionCodeSettings = () => ({
   // URL you want to redirect back to. The domain (www.example.com) for this
   // URL must be whitelisted in the Firebase Console.
   url: `${window.location.protocol}//${window.location.hostname}${window
-    .location.port && `:${window.location.port}`}/login/verify`,
+    .location.port !== 80 && `:${window.location.port}`}/login/verify`,
   // This must be true.
   handleCodeInApp: true,
 })
@@ -16,6 +16,9 @@ export default {
     console.log(actionCodeSettings())
     return firebase.auth().sendSignInLinkToEmail(email, actionCodeSettings())
   },
+
+  login: (email, password) =>
+    firebase.auth().signInWithEmailAndPassword(email, password),
 
   verifyEmail: (email, currentUrl) => {
     // Confirm the link is a sign-in with email link.

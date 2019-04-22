@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { connect } from 'react-redux'
 import { Link } from 'react-router-dom'
 import { formatCents } from '../../util/currency'
+import { ReactComponent as EmptyDrawing } from '../../media/coins.svg'
 
 const types = {
   red: '#FF5A52',
@@ -78,7 +79,7 @@ const Placeholder = () => {
 }
 
 const appStyle = placeholder =>
-  'rounded inline-block no-underline w-full h-full text-black w-1/3 border border-grey-100 overflow-hidden ' +
+  'rounded inline-block no-underline w-full h-full text-black w-1/3 border border-grey-100  ' +
   (!placeholder ? 'bg-white shadow-lg border-none btn-floating' : 'shadow')
 
 const App = ({ app }) => {
@@ -94,14 +95,17 @@ const App = ({ app }) => {
       <Chrome placeholder={hovering} />
       <div className="p-3  flex flex-col justify-between">
         {/* <div className="w-12 h-12 mb-4 rounded-full border border-grey-100" /> */}
+        {/* <div className="block -mt-4"> */}
+        {/* <Avatar name={app.name} src={app.image_url} size={50} round /> */}
+        {/* </div> */}
         <section>
           <h2 className="mt-3 mb-4">{app.name}</h2>
           <p className="leading-normal mb-4 text-grey-400 text-lg">
             {app.description}
           </p>
 
-          <p className="leading-normal mb-4 text-pink-500 text-lg">
-            {formatCents(app.balance)}
+          <p className="leading-normal mb-4 text-pink-600 font-bold text-base">
+            {formatCents(app.balance)} earned
           </p>
         </section>
       </div>
@@ -131,20 +135,23 @@ const Apps = ({ apps, loadApps }) => {
     (a, b) => new Date(apps[a].time_created) - new Date(apps[b]).time_created
   )
 
+  if (!apps || Object.keys(apps).length === 0)
+    return (
+      <div className="flex flex-col items-center justify-center">
+        <EmptyDrawing height={200} />
+        <h1 className="mt-6">Get Started with SayThanks</h1>
+        <p className="text-xl mt-4">
+          <Link className="text-teal-dark" to="/sites/new">
+            Create your SayThanks page
+          </Link>{' '}
+          and start accepting tips everywhere
+        </p>
+      </div>
+    )
   return (
-    <div className="flex flex-col items-stretch mb-20 -my-32">
+    <div className="flex flex-col mb-20 ">
       {/* <h1 className="mb-16 md:self-start">My Sites</h1> */}
       <div className="flex flex-wrap -m-6 ">
-        {apps.length === 0 && (
-          <>
-            <Wrap>
-              <Placeholder />
-            </Wrap>
-            <Wrap>
-              <Placeholder />
-            </Wrap>
-          </>
-        )}
         {sortedApps.map(id => (
           <Wrap key={id}>
             <App app={apps[id]} />

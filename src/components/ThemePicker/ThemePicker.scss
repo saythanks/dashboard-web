@@ -1,0 +1,23 @@
+.theme-picker {
+  .color {
+    transition: all 0.15s;
+
+    &:focus {
+      outline: none;
+    }
+
+    &.-selected {
+      transform: scale(1.2);
+      box-sizing: border-box;
+      box-shadow: 0 0 0 2px white, 0 0 0 4px #ffb8d2;
+
+      &:hover {
+        transform: scale(1.2);
+      }
+    }
+
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}

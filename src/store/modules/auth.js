@@ -56,6 +56,8 @@ export default {
       return auth.requestEmailLink(email)
     },
 
+    login: ({ email, password }) => auth.login(email, password),
+
     verifyEmailLink: ({ email, url }, rootState) => {
       if (!email) email = rootState.auth.tmpEmail
       return auth.verifyEmail(email, url)

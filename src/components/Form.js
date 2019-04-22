@@ -43,7 +43,7 @@ export const Input = ({
   className,
   model = null,
   title,
-  onBlur,
+  onBlur = () => null,
   type = 'text',
   value,
   onChange = () => null,

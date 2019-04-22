@@ -8,7 +8,7 @@ import Edit from './Edit'
 const Site = ({ match }) => (
   <Switch>
     <Route path={`${match.path}/new`} component={Create} />
-    <Route path={`${match.path}/:id/edit`} component={Edit} />
+    <Route path={`${match.path}/:id/settings`} component={Edit} />
     <Route path={`${match.path}/:id`} component={Detail} />
   </Switch>
 )
