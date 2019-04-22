@@ -15,7 +15,7 @@ const IntegrationForm = ({ create, update, app, edit, destroy, appId }) => {
       {
         cloudName: 'saythanks',
         uploadPreset: 'app_img',
-        cropping: true,
+        cropping: false,
         croppingAspectRatio: 1,
       },
       (error, result) => {
