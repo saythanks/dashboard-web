@@ -5,6 +5,7 @@ import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { useForm } from '../../hooks/useForm'
 import * as yup from 'yup'
+import { Avatar } from 'react-avatar'
 
 const IntegrationForm = ({ create, update, app, edit, destroy, appId }) => {
   const [success, setSuccess] = useState(false)
@@ -55,10 +56,7 @@ const IntegrationForm = ({ create, update, app, edit, destroy, appId }) => {
     schema: {
       name: yup.string().required('Name is required'),
       description: yup.string().required('Description is required'),
-      image: yup
-        .string()
-        .url()
-        .required(),
+      image: yup.string().url(),
       url: yup
         .string()
         .url('Must be a valid url (with http:// or https://)')
@@ -93,13 +91,22 @@ const IntegrationForm = ({ create, update, app, edit, destroy, appId }) => {
             className="font-bold underline text-grey-500 text-sm focus:outline-none hover:text-grey-700"
             onClick={() => widget.open()}
           >
-            <img
-              src={values.image}
-              className="w-16 hover:bg-grey-050 h-16 border border-grey-200 rounded-full block mb-2"
-              alt=""
-            />
+            {values.image ? (
+              <img
+                src={values.image}
+                className="w-16 hover:bg-grey-050 h-16 border border-grey-200 rounded-full block mb-2"
+                alt=""
+              />
+            ) : (
+              <div className="block">
+                <Avatar name={values.name} round size={65} />
+              </div>
+            )}
             Set Image
           </button>
+          {errors.image && (
+            <p className="text-red-500 text-sm">Image is required</p>
+          )}
         </FormGroup>
 
         <Input
@@ -131,9 +138,13 @@ const IntegrationForm = ({ create, update, app, edit, destroy, appId }) => {
         onChange={onChange('url')}
       />
 
-      <SecondaryButton type="submit" loading={isSubmitting}>
+      <PrimaryButton
+        type="submit"
+        loading={isSubmitting}
+        className="block w-full"
+      >
         {edit ? 'Update' : 'Create'} Site
-      </SecondaryButton>
+      </PrimaryButton>
 
       {edit && (
         <div className="mt-12">

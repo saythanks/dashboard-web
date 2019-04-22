@@ -33,8 +33,8 @@ const Button = ({
   </button>
 )
 
-export const PrimaryButton = ({ children, ...props } = {}) => (
-  <Button {...props} className="bg-pink-400 text-white">
+export const PrimaryButton = ({ children, className, ...props } = {}) => (
+  <Button {...props} className={'bg-pink-400 text-white ' + className}>
     {children}
   </Button>
 )
