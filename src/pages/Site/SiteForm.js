@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Input, TextArea, FormGroup } from '../../components/Form'
 import { SecondaryButton, PrimaryButton } from '../../components/Button'
 import { connect } from 'react-redux'
@@ -7,7 +7,15 @@ import { useForm } from '../../hooks/useForm'
 import * as yup from 'yup'
 import { Avatar } from 'react-avatar'
 
-const IntegrationForm = ({ create, update, app, edit, destroy, appId }) => {
+const IntegrationForm = ({
+  create,
+  update,
+  app,
+  edit,
+  destroy,
+  appId,
+  get,
+}) => {
   const [success, setSuccess] = useState(false)
 
   const [widget] = useState(
@@ -28,13 +36,26 @@ const IntegrationForm = ({ create, update, app, edit, destroy, appId }) => {
     )
   )
 
+  useEffect(() => {
+    if (appId) {
+      get(appId)
+    }
+  }, [appId])
+
   const handleSubmit = values => {
-    create(values)
-      .then(id => {
-        setSuccess(true)
-      })
-      .catch(console.error)
-      .finally(done)
+    if (!edit)
+      create(values)
+        .then(id => {
+          setSuccess(true)
+        })
+        .catch(console.error)
+        .finally(done)
+    // We are editing now:
+    else
+      update({ id: appId, ...values })
+        .then(id => setSuccess(true))
+        .catch(console.error)
+        .finally(done)
   }
 
   const {
@@ -104,9 +125,6 @@ const IntegrationForm = ({ create, update, app, edit, destroy, appId }) => {
             )}
             Set Image
           </button>
-          {errors.image && (
-            <p className="text-red-500 text-sm">Image is required</p>
-          )}
         </FormGroup>
 
         <Input
@@ -146,16 +164,17 @@ const IntegrationForm = ({ create, update, app, edit, destroy, appId }) => {
         {edit ? 'Update' : 'Create'} Site
       </PrimaryButton>
 
-      {edit && (
+      {/* {edit && (
         <div className="mt-12">
           <PrimaryButton
             className="block"
+            type="button"
             onClick={() => destroy(app ? app.id : '')}
           >
             Delete Site
           </PrimaryButton>
         </div>
-      )}
+      )} */}
     </form>
   )
 }
@@ -166,7 +185,9 @@ const mapState = (state, { appId }) => ({
 
 const mapDispatch = (dispatch, { match }) => ({
   create: dispatch.apps.create,
+  update: dispatch.apps.update,
   destroy: dispatch.apps.delete,
+  get: dispatch.apps.get,
 })
 
 export default connect(

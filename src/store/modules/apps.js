@@ -43,6 +43,19 @@ export default {
       return app.id
     },
 
+    async update({ id, name, description, url, image }) {
+      const app = await api.patch('/apps', {
+        id,
+        name,
+        description,
+        url,
+        image,
+      })
+
+      dispatch.apps.SET_APP(app)
+      return app.id
+    },
+
     async get(id) {
       const app = await api.get(`/apps/${id}`)
       // const payables = await api.get(`/apps/${id}/payables`)
