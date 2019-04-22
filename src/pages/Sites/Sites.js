@@ -146,6 +146,13 @@ const Apps = ({ apps, loadApps }) => {
           </Link>{' '}
           and start accepting tips everywhere
         </p>
+
+        <Link
+          to="/sites/new"
+          className="btn-floating bg-pink-500 text-white px-4 py-2 no-underline font-bold rounded tracking-wide uppercase mt-4 text-xl"
+        >
+          Create a new Page
+        </Link>
       </div>
     )
   return (
