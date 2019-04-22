@@ -135,11 +135,11 @@ const Apps = ({ apps, loadApps }) => {
     (a, b) => new Date(apps[a].time_created) - new Date(apps[b]).time_created
   )
 
-  if (!apps || Object.keys(apps).length === 0)
+  if (true || !apps || Object.keys(apps).length === 0)
     return (
       <div className="flex flex-col items-center justify-center">
         <EmptyDrawing height={200} />
-        <h1 className="mt-6">Get Started with SayThanks</h1>
+        <h1 className="mt-12">Get Started with SayThanks</h1>
         <p className="text-xl mt-4">
           <Link className="text-teal-dark" to="/sites/new">
             Create your SayThanks page
@@ -149,7 +149,7 @@ const Apps = ({ apps, loadApps }) => {
 
         <Link
           to="/sites/new"
-          className="btn-floating bg-pink-500 text-white px-4 py-2 no-underline font-bold rounded tracking-wide uppercase mt-4 text-xl"
+          className="btn-floating bg-pink-500 text-white px-4 py-2 no-underline font-bold rounded tracking-wide uppercase mt-10 text-xl"
         >
           Create a new Page
         </Link>
