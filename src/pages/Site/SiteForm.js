@@ -1,12 +1,21 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { Input, TextArea, FormGroup } from '../../components/Form'
 import { SecondaryButton, PrimaryButton } from '../../components/Button'
 import { connect } from 'react-redux'
 import { Redirect } from 'react-router-dom'
 import { useForm } from '../../hooks/useForm'
 import * as yup from 'yup'
+import { Avatar } from 'react-avatar'
 
-const IntegrationForm = ({ create, update, app, edit, destroy, appId }) => {
+const IntegrationForm = ({
+  create,
+  update,
+  app,
+  edit,
+  destroy,
+  appId,
+  get,
+}) => {
   const [success, setSuccess] = useState(false)
 
   const [widget] = useState(
@@ -27,13 +36,26 @@ const IntegrationForm = ({ create, update, app, edit, destroy, appId }) => {
     )
   )
 
+  useEffect(() => {
+    if (appId) {
+      get(appId)
+    }
+  }, [appId])
+
   const handleSubmit = values => {
-    create(values)
-      .then(id => {
-        setSuccess(true)
-      })
-      .catch(console.error)
-      .finally(done)
+    if (!edit)
+      create(values)
+        .then(id => {
+          setSuccess(true)
+        })
+        .catch(console.error)
+        .finally(done)
+    // We are editing now:
+    else
+      update({ id: appId, ...values })
+        .then(id => setSuccess(true))
+        .catch(console.error)
+        .finally(done)
   }
 
   const {
@@ -55,10 +77,7 @@ const IntegrationForm = ({ create, update, app, edit, destroy, appId }) => {
     schema: {
       name: yup.string().required('Name is required'),
       description: yup.string().required('Description is required'),
-      image: yup
-        .string()
-        .url()
-        .required(),
+      image: yup.string().url(),
       url: yup
         .string()
         .url('Must be a valid url (with http:// or https://)')
@@ -93,11 +112,17 @@ const IntegrationForm = ({ create, update, app, edit, destroy, appId }) => {
             className="font-bold underline text-grey-500 text-sm focus:outline-none hover:text-grey-700"
             onClick={() => widget.open()}
           >
-            <img
-              src={values.image}
-              className="w-16 hover:bg-grey-050 h-16 border border-grey-200 rounded-full block mb-2"
-              alt=""
-            />
+            {values.image ? (
+              <img
+                src={values.image}
+                className="w-16 hover:bg-grey-050 h-16 border border-grey-200 rounded-full block mb-2"
+                alt=""
+              />
+            ) : (
+              <div className="block">
+                <Avatar name={values.name} round size={65} />
+              </div>
+            )}
             Set Image
           </button>
         </FormGroup>
@@ -131,20 +156,25 @@ const IntegrationForm = ({ create, update, app, edit, destroy, appId }) => {
         onChange={onChange('url')}
       />
 
-      <SecondaryButton type="submit" loading={isSubmitting}>
+      <PrimaryButton
+        type="submit"
+        loading={isSubmitting}
+        className="block w-full"
+      >
         {edit ? 'Update' : 'Create'} Site
-      </SecondaryButton>
+      </PrimaryButton>
 
-      {edit && (
+      {/* {edit && (
         <div className="mt-12">
           <PrimaryButton
             className="block"
+            type="button"
             onClick={() => destroy(app ? app.id : '')}
           >
             Delete Site
           </PrimaryButton>
         </div>
-      )}
+      )} */}
     </form>
   )
 }
@@ -155,7 +185,9 @@ const mapState = (state, { appId }) => ({
 
 const mapDispatch = (dispatch, { match }) => ({
   create: dispatch.apps.create,
+  update: dispatch.apps.update,
   destroy: dispatch.apps.delete,
+  get: dispatch.apps.get,
 })
 
 export default connect(
