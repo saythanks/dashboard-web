@@ -14,9 +14,9 @@ const Footer = () => (
         </Link>
       </section>
       <section>
-        <LowkeyLink to="/">Privacy</LowkeyLink>
-        <LowkeyLink to="/">Terms</LowkeyLink>
-        <LowkeyLink to="/">Help</LowkeyLink>
+        <a href="https://www.saythanks.me/privacy" className="no-underline text-grey-400 text-sm mx-4">Privacy</a>
+        <a href="https://www.saythanks.me/terms" className="no-underline text-grey-400 text-sm mx-4">Terms</a>
+        <a href="mailto:help@saythanks.me?subject=Help Request for SayThanks" className="no-underline text-grey-400 text-sm mx-4">Help</a>
       </section>
     </div>
   </footer>

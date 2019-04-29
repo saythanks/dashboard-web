@@ -293,13 +293,13 @@ const TxChartCard = ({ appId, className }) => {
   }, [page, appId])
 
   
-  let data = (!tx || tx.items.length === 0) 
-                ? []
-                : tx.items.map(t => ({"name": moment(t.time_created).format("M-DD"), "amt": formatCents(tx.amount)}));
+  // let data = (!tx || tx.items.length === 0) 
+  //               ? []
+  //               : tx.items.map(t => ({"name": moment(t.time_created).format("M-DD"), "amount": t.amount}));
 
-  // let dummyData = [{"name": "4-01", "amount": 3.70},
-  //         {"name": "4-02", "amount": 14.90},
-  //         {"name": "4-03", "amount": 1.40}];
+  let dummyData = [{"name": "4-01", "amount": 3.70, "from": "Giovanni"},
+          {"name": "4-02", "amount": 14.90, "from": "Ben"},
+          {"name": "4-03", "amount": 1.40, "from": "Oscar"}];
 
   return (
     <Card className={className}>
@@ -310,15 +310,15 @@ const TxChartCard = ({ appId, className }) => {
 
       {loading ? (
         <Spinner />
-      ) : data.length === 0 ? (
+      ) : dummyData.length === 0 ? (
         'Nothing Yet'
       ) : (
         <div>
-          <BarChart width={500} height={400} data={data} margin={{ top: 20, right: 20, bottom: 20, left: 20}}>
+          <BarChart width={500} height={400} data={dummyData} margin={{ top: 20, right: 20, bottom: 20, left: 20}}>
             <Bar dataKey="amount" fill="#DA127D" />
             <XAxis dataKey="name" />
             <YAxis tickFormatter={t => formatCents(100*parseInt(t))}/>
-            {/* <Tooltip formatter={t => formatCents(100*parseInt(t))}/> */}
+            <Tooltip cursor={{fill: 'red', fillOpacity: 0.05}} formatter={(v, n, p) => formatCents(100*parseInt(v))} />
           </BarChart>
         </div>
       )}
